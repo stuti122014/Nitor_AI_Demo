@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARM_SUBSCRIPTION_ID: "4f12f3dd-584c-4465-8c36-0bdac946f2be"
-      ARM_TENANT_ID: "d7758e8f-1df3-489f-86b5-a2254f55f9cc"
+      ARM_TENANT_ID: "baa991a3-ec38-4c4e-947d-bc44436c3c42"
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
 
