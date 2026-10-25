@@ -11,8 +11,8 @@ variable "location" {
 }
 
 variable "vnet_name" {
-  type        = string
-  default     = "vnet-nitor-ai-prod"
+  type    = string
+  default = "vnet-nitor-ai-prod"
 }
 
 variable "vnet_cidr" {
