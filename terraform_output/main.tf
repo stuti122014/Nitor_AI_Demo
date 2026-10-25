@@ -2,6 +2,15 @@
 # Modular Infrastructure Deployment for Nitor AI Demo
 # Target Azure Subscription: Ascendion Nitor Daas-Platform (37edf351-2797-441e-8f2a-b27c5a9ed9e2)
 # ==============================================================================
+# AzureRM Resources Provisioned via Modular Architecture:
+# - azurerm_resource_group
+# - azurerm_virtual_network
+# - azurerm_subnet (frontend-subnet, backend-subnet, db-subnet)
+# - azurerm_container_registry
+# - azurerm_key_vault
+# - azurerm_kubernetes_cluster
+# - azurerm_postgresql_flexible_server
+# ==============================================================================
 
 locals {
   common_tags = {
