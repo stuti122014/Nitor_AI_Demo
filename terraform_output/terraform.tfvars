@@ -1,0 +1,13 @@
+resource_group_name  = "rg-fitcart-store-prod"
+location             = "eastus"
+vnet_name            = "vnet-fitcart-store-prod"
+vnet_cidr            = "10.0.0.0/16"
+frontend_subnet_cidr = "10.0.1.0/24"
+backend_subnet_cidr  = "10.0.3.0/24"
+database_subnet_cidr = "10.0.2.0/24"
+aks_cluster_name     = "aks-fitcart-store-prod"
+aks_node_count       = 3
+keyvault_name        = "kvfitcartprod"
+acr_name             = "acrfitcartprod"
+db_server_name       = "daas-app-db"
+environment          = "production"
