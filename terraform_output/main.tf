@@ -1,6 +1,6 @@
 # ==============================================================================
 # Modular Infrastructure Deployment for Nitor AI Demo
-# Target Azure Subscription: Azure Demo Subscription (00000000-0000-0000-0000-000000000000)
+# Target Azure Subscription: Azure Demo Subscription (4f12f3dd-584c-4465-8c36-0bdac946f2be)
 # ==============================================================================
 # AzureRM Resources Provisioned via Modular Architecture:
 # - azurerm_resource_group
@@ -48,7 +48,8 @@ module "keyvault" {
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   keyvault_name       = var.keyvault_name
-  tenant_id           = "00000000-0000-0000-0000-000000000000"
+  tenant_id           = "d7758e8f-1df3-489f-86b5-a2254f55f9cc"
+  sku_name            = var.keyvault_sku
   db_admin_username   = var.db_admin_username
   db_admin_password   = var.db_admin_password
   tags                = local.common_tags
@@ -60,6 +61,7 @@ module "acr" {
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   acr_name            = var.acr_name
+  sku                 = var.acr_sku
   tags                = local.common_tags
 }
 
@@ -69,8 +71,9 @@ module "aks" {
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   cluster_name        = var.aks_cluster_name
+  kubernetes_version  = var.aks_kubernetes_version
   node_count          = var.aks_node_count
-  vm_size             = "Standard_B2s"
+  vm_size             = var.aks_vm_size
   subnet_id           = module.network.backend_subnet_id
   frontend_subnet_id  = module.network.frontend_subnet_id
   tags                = local.common_tags
@@ -85,7 +88,7 @@ module "postgresql" {
   delegated_subnet_id    = module.network.database_subnet_id
   administrator_login    = var.db_admin_username
   administrator_password = var.db_admin_password
-  storage_mb             = 32768
-  sku_name               = "B_Standard_B1ms"
+  storage_mb             = var.db_storage_mb
+  sku_name               = var.db_sku_name
   tags                   = local.common_tags
 }
