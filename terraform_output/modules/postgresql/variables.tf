@@ -14,6 +14,17 @@ variable "delegated_subnet_id" {
   type = string
 }
 
+variable "administrator_login" {
+  type    = string
+  default = "psqladmin"
+}
+
+variable "administrator_password" {
+  type      = string
+  sensitive = true
+  default   = "NitorSecure@2026!"
+}
+
 variable "storage_mb" {
   type    = number
   default = 32768

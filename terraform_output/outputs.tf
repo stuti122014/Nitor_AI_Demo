@@ -27,3 +27,23 @@ output "database_fqdn" {
   value       = module.postgresql.fqdn
   description = "PostgreSQL Flexible Server FQDN"
 }
+
+output "key_vault_db_username_secret_id" {
+  value       = module.keyvault.db_username_secret_id
+  description = "Key Vault Secret ID for DB username"
+}
+
+output "key_vault_db_password_secret_id" {
+  value       = module.keyvault.db_password_secret_id
+  description = "Key Vault Secret ID for DB password"
+}
+
+output "aks_frontend_workload_subnet_id" {
+  value       = module.aks.frontend_workload_subnet_id
+  description = "Auto-selected VNet frontend subnet for frontend workload ingress"
+}
+
+output "aks_backend_workload_subnet_id" {
+  value       = module.aks.backend_workload_subnet_id
+  description = "Auto-selected VNet backend subnet for backend compute services"
+}

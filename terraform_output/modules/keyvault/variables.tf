@@ -19,6 +19,17 @@ variable "sku_name" {
   default = "standard"
 }
 
+variable "db_admin_username" {
+  type    = string
+  default = "psqladmin"
+}
+
+variable "db_admin_password" {
+  type      = string
+  sensitive = true
+  default   = "NitorSecure@2026!"
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

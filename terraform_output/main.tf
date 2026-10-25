@@ -42,13 +42,15 @@ module "network" {
   tags                 = local.common_tags
 }
 
-# 3. Modular Key Vault
+# 3. Modular Key Vault (Storing DB secrets securely)
 module "keyvault" {
   source              = "./modules/keyvault"
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   keyvault_name       = var.keyvault_name
   tenant_id           = "d7758e8f-1df3-489f-86b5-a2254f55f9cc"
+  db_admin_username   = var.db_admin_username
+  db_admin_password   = var.db_admin_password
   tags                = local.common_tags
 }
 
@@ -61,7 +63,7 @@ module "acr" {
   tags                = local.common_tags
 }
 
-# 5. Modular Azure Kubernetes Service
+# 5. Modular Azure Kubernetes Service (VNet Full Range with Auto-Selected Subnets)
 module "aks" {
   source              = "./modules/aks"
   resource_group_name = module.resource_group.name
@@ -70,17 +72,20 @@ module "aks" {
   node_count          = var.aks_node_count
   vm_size             = "Standard_B2s"
   subnet_id           = module.network.backend_subnet_id
+  frontend_subnet_id  = module.network.frontend_subnet_id
   tags                = local.common_tags
 }
 
-# 6. Modular PostgreSQL Flexible Server
+# 6. Modular PostgreSQL Flexible Server (Secured via Key Vault Credentials)
 module "postgresql" {
-  source              = "./modules/postgresql"
-  resource_group_name = module.resource_group.name
-  location            = module.resource_group.location
-  server_name         = var.db_server_name
-  delegated_subnet_id = module.network.database_subnet_id
-  storage_mb          = 32768
-  sku_name            = "B_Standard_B1ms"
-  tags                = local.common_tags
+  source                 = "./modules/postgresql"
+  resource_group_name    = module.resource_group.name
+  location               = module.resource_group.location
+  server_name            = var.db_server_name
+  delegated_subnet_id    = module.network.database_subnet_id
+  administrator_login    = var.db_admin_username
+  administrator_password = var.db_admin_password
+  storage_mb             = 32768
+  sku_name               = "B_Standard_B1ms"
+  tags                   = local.common_tags
 }

@@ -60,6 +60,19 @@ variable "db_server_name" {
   default = "psql-nitor-ai-prod"
 }
 
+variable "db_admin_username" {
+  type        = string
+  default     = "psqladmin"
+  description = "Database administrator username"
+}
+
+variable "db_admin_password" {
+  type        = string
+  sensitive   = true
+  default     = "NitorSecure@2026!"
+  description = "Database administrator password saved in Key Vault"
+}
+
 variable "environment" {
   type    = string
   default = "production"

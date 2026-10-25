@@ -29,6 +29,11 @@ variable "subnet_id" {
   type = string
 }
 
+variable "frontend_subnet_id" {
+  type    = string
+  default = ""
+}
+
 variable "tags" {
   type    = map(string)
   default = {}
