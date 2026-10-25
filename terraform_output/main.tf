@@ -1,6 +1,6 @@
 # ==============================================================================
 # Modular Infrastructure Deployment for Nitor AI Demo
-# Target Azure Subscription: Ascendion Nitor Daas-Platform (37edf351-2797-441e-8f2a-b27c5a9ed9e2)
+# Target Azure Subscription: Azure Demo Subscription (00000000-0000-0000-0000-000000000000)
 # ==============================================================================
 # AzureRM Resources Provisioned via Modular Architecture:
 # - azurerm_resource_group
@@ -48,7 +48,7 @@ module "keyvault" {
   resource_group_name = module.resource_group.name
   location            = module.resource_group.location
   keyvault_name       = var.keyvault_name
-  tenant_id           = "d7758e8f-1df3-489f-86b5-a2254f55f9cc"
+  tenant_id           = "00000000-0000-0000-0000-000000000000"
   db_admin_username   = var.db_admin_username
   db_admin_password   = var.db_admin_password
   tags                = local.common_tags
