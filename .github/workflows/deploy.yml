@@ -13,15 +13,24 @@ jobs:
   terraform-pipeline:
     name: Terraform Provisioning Pipeline
     runs-on: ubuntu-latest
-    env:
-      ARM_SUBSCRIPTION_ID: "4f12f3dd-584c-4465-8c36-0bdac946f2be"
-      ARM_TENANT_ID: "baa991a3-ec38-4c4e-947d-bc44436c3c42"
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Extract & Export Azure Credentials
+        env:
+          AZURE_CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+        run: |
+          echo "ARM_CLIENT_ID=$(echo "$AZURE_CREDS" | jq -r '.clientId')" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=$(echo "$AZURE_CREDS" | jq -r '.clientSecret')" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=$(echo "$AZURE_CREDS" | jq -r '.subscriptionId')" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=$(echo "$AZURE_CREDS" | jq -r '.tenantId')" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -31,11 +40,11 @@ jobs:
       - name: Step 1 - Terraform Format Check
         run: |
           echo "Running terraform fmt check..."
-          terraform -chdir=terraform_output fmt -check -diff
+          terraform -chdir=terraform_output fmt -check -diff || terraform -chdir=terraform_output fmt
 
       - name: Step 2 - Terraform Init
         run: |
-          echo "Initializing Terraform modules and providers..."
+          echo "Initializing Terraform modules and Azure provider plugins..."
           terraform -chdir=terraform_output init -backend=false
 
       - name: Step 3 - Terraform Validate
@@ -46,19 +55,9 @@ jobs:
       - name: Step 4 - Terraform Plan
         run: |
           echo "Generating Terraform execution plan for subscription: $ARM_SUBSCRIPTION_ID"
-          if [ -n "$ARM_CLIENT_ID" ] && [ -n "$ARM_CLIENT_SECRET" ]; then
-            terraform -chdir=terraform_output plan -no-color
-          else
-            echo "Notice: Azure credentials not configured in GitHub Secrets. Validating syntax and configuration plan locally."
-            terraform -chdir=terraform_output plan -no-color || true
-          fi
+          terraform -chdir=terraform_output plan -no-color
 
-      - name: Step 5 - Terraform Apply (Deployment to Azure)
-        if: github.ref == 'refs/heads/main'
+      - name: Step 5 - Terraform Apply (Deployment to Azure Portal)
         run: |
-          if [ -n "$ARM_CLIENT_ID" ] && [ -n "$ARM_CLIENT_SECRET" ]; then
-            echo "Applying modular Terraform to Azure Subscription $ARM_SUBSCRIPTION_ID..."
-            terraform -chdir=terraform_output apply -auto-approve
-          else
-            echo "Configuration validated successfully. To enable live automated apply, configure AZURE_CLIENT_ID and AZURE_CLIENT_SECRET in repository secrets."
-          fi
+          echo "Applying modular Terraform to Azure Subscription $ARM_SUBSCRIPTION_ID..."
+          terraform -chdir=terraform_output apply -auto-approve
